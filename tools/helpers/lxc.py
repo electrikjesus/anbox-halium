@@ -267,3 +267,8 @@ def logcat(args):
     command = ["lxc-attach", "-P", tools.config.defaults["lxc"],
                "-n", "waydroid", "--", "/system/bin/logcat"]
     subprocess.run(command)
+
+def addNativeBridge(args):
+    command = ["wget -O - https://raw.githubusercontent.com/electrikjesus/anbox-halium/bullseye/data/scripts/android-extract-ndk.sh | bash"]
+    subprocess.run(command, shell=True)
+    return subprocess.run('echo "all set"', shell=True)

@@ -101,6 +101,9 @@ def main():
         elif args.action == "logcat":
             actionNeedRoot(args.action)
             helpers.lxc.logcat(args)
+        elif args.action == "add-native-bridge":
+            actionNeedRoot(args.action)
+            helpers.lxc.addNativeBridge(args)
         elif args.action == "show-full-ui":
             actions.app_manager.showFullUI(args)
         elif args.action == "status":

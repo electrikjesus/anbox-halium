@@ -110,6 +110,10 @@ def arguments_logcat(subparser):
     ret = subparser.add_parser("logcat", help="show android logcat")
     return ret
 
+def arguments_nb(subparser):
+    ret = subparser.add_parser("add-native-bridge", help="download and extract native-bridge")
+    return ret
+
 def arguments():
     parser = argparse.ArgumentParser(prog="waydroid")
 
@@ -144,6 +148,7 @@ def arguments():
     arguments_fullUI(sub)
     arguments_shell(sub)
     arguments_logcat(sub)
+    arguments_nb(sub)
 
     if argcomplete:
         argcomplete.autocomplete(parser, always_complete_options="long")
