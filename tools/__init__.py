@@ -48,7 +48,7 @@ def main():
 
         tools_logging.init(args)
 
-        if not os.environ.get("WAYLAND_DISPLAY"):
+        if os.getenv("HOME") != "/root" and (os.environ.get("XDG_SESSION_TYPE")!="wayland" or os.environ.get("WAYLAND_DISPLAY") is None) :
             logging.error("Wayland session not detected. Only Wayland session manager is supported.")
             logging.error("If you're unable to use wayland you can use the weston compositor instead.")
             return 1
