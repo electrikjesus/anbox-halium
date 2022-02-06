@@ -9,6 +9,7 @@ import shutil
 import platform
 import tools.config
 import tools.helpers.run
+from os.path import exists
 
 
 def get_lxc_version(args):
@@ -134,7 +135,14 @@ def set_lxc_config(args):
         raise OSError("LXC is not installed")
     elif lxc_ver <= 2:
         config_file = "config_1"
-    config_path = tools.config.tools_src + "/data/configs/" + config_file
+        
+    # Check for config overrides
+    config_override_file = ".config/waydroid/scripts/update/config_nodes/" + config_file
+    override_file_exists = exists(path_to_file)
+    if override_file_exists:
+        config_path = config_override_file
+    else:
+        config_path = tools.config.tools_src + "/data/configs/" + config_file
 
     command = ["mkdir", "-p", lxc_path]
     tools.helpers.run.user(args, command)
