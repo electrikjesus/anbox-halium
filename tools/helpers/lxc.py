@@ -9,7 +9,7 @@ import shutil
 import platform
 import tools.config
 import tools.helpers.run
-from os.path import exists
+from os.path import exists, expanduser
 
 
 def get_lxc_version(args):
@@ -137,7 +137,8 @@ def set_lxc_config(args):
         config_file = "config_1"
         
     # Check for config overrides
-    config_override_file = ".config/waydroid/scripts/update/config_nodes/" + config_file
+    home = expanduser("~")
+    config_override_file = home + ".config/waydroid/scripts/update/config_nodes/" + config_file
     override_file_exists = exists(path_to_file)
     if override_file_exists:
         config_path = config_override_file
