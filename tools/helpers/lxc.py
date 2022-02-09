@@ -139,7 +139,7 @@ def set_lxc_config(args):
     # Check for config overrides
     home = expanduser("~")
     config_override_file = home + ".config/waydroid/scripts/update/config_nodes/" + config_file
-    override_file_exists = exists(path_to_file)
+    override_file_exists = exists(config_override_file)
     if override_file_exists:
         config_path = config_override_file
     else:
