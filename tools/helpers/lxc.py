@@ -174,12 +174,25 @@ def make_base_props(args):
 
     gralloc = find_hal("gralloc")
     if gralloc == "":
-        if os.path.exists("/dev/dri"):
-            gralloc = "gbm"
-            egl = "mesa"
-        else:
-            gralloc = "default"
-            egl = "swiftshader"
+        fbid = os.system('cat /proc/fb')
+        
+        with open('/proc/fb') as fbf:
+            fbfile = fbf.readlines()
+            
+        for line in fbfile:
+            if 'i915drmfb' or 'inteldrmfb' or 'radeondrmfb' or 'nouveau' or 'svgadrmfb' or 'amdgpudrmfb' in line:
+                print("compatible GPU found, enabling hardware rendering")
+                gralloc = "gbm"
+                egl = "mesa"
+            elif 'virtio*drmfb' or '*DRM*emulated':
+                print("compatible vGPU found, enabling hardware rendering")
+                gralloc = "gbm"
+                egl = "mesa"
+            else:
+                print("incompatible GPU found, enabling software rendering")
+                gralloc = "default"
+                egl = "swiftshader"
+            
         props.append("debug.stagefright.ccodec=0")
     props.append("ro.hardware.gralloc=" + gralloc)
 
