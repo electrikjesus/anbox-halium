@@ -189,8 +189,15 @@ def make_base_props(args):
     gralloc = find_hal("gralloc")
     if gralloc == "":
         if os.path.exists("/dev/dri"):
-            gralloc = "gbm"
-            egl = "mesa"
+            with open("/proc/modules", "r") as f:
+                data = f.read()
+                if "nvidia" in data:
+                    logging.warn("\nProperty Nvidia driver detected and it is not supported\nSwitching to software rendering now\nTo prevent this, you can use iGPU instead")
+                    gralloc = "default"
+                    egl = "swiftshader"
+                else:
+                    gralloc = "gbm"
+                    egl = "mesa"
         else:
             gralloc = "default"
             egl = "swiftshader"
