@@ -9,6 +9,7 @@ import shutil
 import platform
 import tools.config
 import tools.helpers.run
+from os.path import exists, expanduser
 
 
 def get_lxc_version(args):
@@ -118,6 +119,11 @@ def generate_nodes_lxc_config(args):
     for n in glob.glob("/tmp/run-*"):
         make_entry(n, options="rbind,create=dir,optional 0 0")
 
+    # NFC config
+    make_entry("/system/etc/libnfc-nci.conf", options="bind,optional 0 0")
+
+    # media_codec XML
+    make_entry("/vendor/etc/media_codecs.xml", options="bind,optional 0 0")
     return nodes
 
 
@@ -129,7 +135,15 @@ def set_lxc_config(args):
         raise OSError("LXC is not installed")
     elif lxc_ver <= 2:
         config_file = "config_1"
-    config_path = tools.config.tools_src + "/data/configs/" + config_file
+        
+    # Check for config overrides
+    home = expanduser("~")
+    config_override_file = home + ".config/waydroid/scripts/update/config_nodes/" + config_file
+    override_file_exists = exists(config_override_file)
+    if override_file_exists:
+        config_path = config_override_file
+    else:
+        config_path = tools.config.tools_src + "/data/configs/" + config_file
 
     command = ["mkdir", "-p", lxc_path]
     tools.helpers.run.user(args, command)
